@@ -4,8 +4,9 @@
     "author": "Humanytek",
     "license": "LGPL-3",
     "depends": [
-        "sale",
         "account",
+        "sale",
+        "sale_stock",
         "l10n_mx_edi",
         "l10n_mx_edi_40",
     ],

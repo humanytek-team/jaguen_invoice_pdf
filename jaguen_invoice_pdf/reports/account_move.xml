@@ -4,6 +4,8 @@
     inherit_id="account.report_invoice_document" primary="True"/>
   <template id="l10n_mx_edi.report_invoice_document_mx"
     inherit_id="account.report_invoice_document" primary="True"/>
+  <template id="sale_stock.report_invoice_document_inherit_sale_stock"
+    inherit_id="account.report_invoice_document" primary="True"/>
 
   <template id="account.report_invoice_document">
     <t t-call="web.external_layout">
