@@ -7,11 +7,34 @@
   <template id="sale_stock.report_invoice_document_inherit_sale_stock"
     inherit_id="account.report_invoice_document" primary="True"/>
 
+  <record id="paperformat_inv" model="report.paperformat">
+    <field name="name">INV Paper</field>
+    <field name="format">A4</field>
+    <field name="page_height">0</field>
+    <field name="page_width">0</field>
+    <field name="orientation">Portrait</field>
+    <field name="margin_top">35</field>
+    <field name="margin_bottom">32</field>
+    <field name="margin_left">7</field>
+    <field name="margin_right">7</field>
+    <field name="header_line" eval="False"/>
+    <field name="header_spacing">30</field>
+    <field name="dpi">90</field>
+  </record>
+
+  <record id="account.account_invoices_without_payment" model="ir.actions.report">
+    <field name="paperformat_id" ref="paperformat_inv"/>
+  </record>
+
+  <record id="account.account_invoices" model="ir.actions.report">
+    <field name="paperformat_id" ref="paperformat_inv"/>
+  </record>
+
   <template id="account.report_invoice_document">
     <t t-call="web.external_layout">
       <t t-set="o" t-value="o.with_context(lang=lang)"/>
       <div class="page" style="font-size: 10px">
-        <div id="informations" class="row mt-4 mb-4">
+        <div id="informations" class="row mb-4">
           <div class="col-auto" name="info_left">
             <div class="row" name="name">
               <div class="col-4">
@@ -43,16 +66,15 @@
               </div>
               <div class="col-8">
                 <p class="m-0" t-field="o.partner_id.street"/>
-                <p class="m-0" t-field="o.partner_id.l10n_mx_edi_colony"/>
-              </div>
-            </div>
-            <div class="row" name="partner_address_2">
-              <div class="col-4"/>
-              <div class="col-8">
-                <p class="m-0" t-field="o.partner_id.state_id.name"/>
-                <p class="m-0" t-field="o.partner_id.city"/>
-                <p class="m-0" t-field="o.partner_id.country_id"/>
-                <p class="m-0" t-field="o.partner_id.zip"/>
+                <p class="m-0">
+                  <span t-field="o.partner_id.l10n_mx_edi_colony"/>, <span
+                    t-field="o.partner_id.state_id.name"/>
+                </p>
+                <p class="m-0">
+                  <span t-field="o.partner_id.city"/>, <span
+                    t-field="o.partner_id.country_id"/>, <span
+                    t-field="o.partner_id.zip"/>
+                </p>
               </div>
             </div>
             <div class="row" name="partner_rfc">
@@ -104,7 +126,7 @@
                 <strong>Vencimiento</strong>
               </div>
               <div class="col-8">
-                <p class="m-0" t-field="o.invoice_payment_term_id"/>
+                <p class="m-0" t-field="o.invoice_date_due"/>
               </div>
             </div>
             <div class="row" name="invoice_type">
@@ -300,10 +322,16 @@
           </div>
         </div>
 
-        <class class="row">Utilice la sig ref al realizar su pago: <strong>
-            <span class="m-0"
-              t-field="o.payment_reference"/>
-          </strong>
+        <div class="row">
+          <div class="col">
+            <span class="m-0" t-field="o.narration"/>
+          </div>
+        </div>
+        <class class="row">
+          <div class="col"> Utilice la sig ref al realizar su pago: <strong>
+              <span class="m-0"
+                t-field="o.payment_reference"/>
+            </strong></div>
         </class>
 
         <t t-set="cfdi_vals" t-value="o._l10n_mx_edi_decode_cfdi()"/>
@@ -360,11 +388,18 @@
         </t>
 
         <div class="row mt-5" style="height: 10px; page-break-before:always;"/>
-        <div class="row mt-5" style="border: 1px solid black;">
+        <div class="row mt-5" style="border: 1px solid black; text-transform: uppercase;">
           <div class="col-12">
             <p>
-              <strong> PAGARE </strong>
-              <span class="text-uppercase" t-esc="cfdi_vals.get('uuid')"/>
+              <div class="row">
+                <div class="col-6">
+                  <strong> PAGARE </strong>
+                  <span t-esc="cfdi_vals.get('uuid')"/>
+                </div>
+                <div class="col-6">
+                  <span t-field="o.name"/>
+                </div>
+              </div>
             </p>
             <p>
               <span t-field="o.company_id.city"/>, <span t-field="o.company_id.state_id.name"/> A . <span
@@ -375,20 +410,21 @@
                 t-field="o.company_id.name"/> EN <span t-field="o.company_id.city"/>, <span
                 t-field="o.company_id.state_id.name"/>, EL DIA <span
                 t-field="o.invoice_date_due"/> LA CANTIDAD DE <span
-                t-esc="o._l10n_mx_edi_cfdi_amount_to_text()"/>. ESTE PAGARE CAUSARA INTERESES
+                t-field="o.amount_total_signed"/> (<span
+                t-esc="o._l10n_mx_edi_cfdi_amount_to_text()"/>). ESTE PAGARE CAUSARA INTERESES
               MORATORIOS A RAZON DEL 5% MENSUAL A PARTIR DE LA FECHA DE VENCIMIENTO, PAGADERO
               JUNTAMENTE CON EL PRINCIPAL, EN CASO DE COBRO JUDICIAL, ME(NOS) COMPROMETO(EMOS) AL
-              PAGO DE LOS GASTOS Y COSTAR QUE SE OCACIONEN, RENUNCIANDO AL FUERO DE MI(NUESTRO)
+              PAGO DE LOS GASTOS Y COSTAS QUE SE OCASIONEN, RENUNCIANDO AL FUERO DE MI(NUESTRO)
               DOMICILIO Y ME(NOS) SOMETO(EMOS) EXPRESAMENTE A LOS TRIBUNALES QUE EL ACREEDOR ELIJA </p>
             <div class="row">
               <div class="col-6">
-                <p> NOMBRE: <span
+                <p class="m-0"> NOMBRE: <span
                     t-field="o.partner_id.name"/>
                 </p>
-                <p> DOMICILIO: <span
+                <p class="m-0"> DOMICILIO: <span
                     t-field="o.partner_id.street"/>
                 </p>
-                <p> CIUDAD: <span t-field="o.company_id.city"/>, <span
+                <p class="m-0"> CIUDAD: <span t-field="o.company_id.city"/>, <span
                     t-field="o.company_id.state_id.name"/>,<span t-field="o.company_id.country_id"/>
                   ,<span
                     t-field="o.company_id.zip"/>
@@ -402,6 +438,7 @@
                 <div class="row"> _________________________________________ </div>
               </div>
             </div>
+            <div class="row" style="height: 40px;"/>
           </div>
         </div>
       </div>
