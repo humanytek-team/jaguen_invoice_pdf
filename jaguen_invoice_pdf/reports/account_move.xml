@@ -14,7 +14,7 @@
     <field name="page_width">0</field>
     <field name="orientation">Portrait</field>
     <field name="margin_top">35</field>
-    <field name="margin_bottom">32</field>
+    <field name="margin_bottom">15</field>
     <field name="margin_left">7</field>
     <field name="margin_right">7</field>
     <field name="header_line" eval="False"/>
@@ -34,7 +34,7 @@
     <t t-call="web.external_layout">
       <t t-set="o" t-value="o.with_context(lang=lang)"/>
       <div class="page" style="font-size: 10px">
-        <div id="informations" class="row mb-4">
+        <div id="informations" class="row mb-0">
           <div class="col-auto" name="info_left">
             <div class="row" name="name">
               <div class="col-4">
@@ -69,8 +69,6 @@
                 <p class="m-0">
                   <span t-field="o.partner_id.l10n_mx_edi_colony"/>, <span
                     t-field="o.partner_id.state_id.name"/>
-                </p>
-                <p class="m-0">
                   <span t-field="o.partner_id.city"/>, <span
                     t-field="o.partner_id.country_id"/>, <span
                     t-field="o.partner_id.zip"/>
@@ -95,12 +93,11 @@
             </div>
             <div class="row" name="partner_phone">
               <div class="col-4">
-                <strong>Teléfono</strong>
+                <strong>Contacto</strong>
               </div>
               <div class="col-8">
-                <p class="m-0" t-field="o.partner_id.phone"/>
-                <p class="m-0" t-field="o.partner_id.mobile"/>
-                <p class="m-0" t-field="o.partner_id.email"/>
+                <span class="m-0" t-field="o.partner_id.phone"/>, <span class="m-0"
+                  t-field="o.partner_id.mobile"/>, <span class="m-0" t-field="o.partner_id.email"/>
               </div>
             </div>
           </div>
@@ -269,15 +266,21 @@
           </tbody>
         </table>
 
-        <div class="clearfix">
+        <div class="clearfix mt-0">
           <div id="total" class="row">
             <div class="col-6">
-              <strong>
-                <p class="m-0">Esta factura se emite a solicitud del cliente en terminos del
-                  Articulo 37 del Codigo Fiscal de la Federacion.</p>
-                <p class="m-0">Versión CFDI: 4.0</p>
-                <p class="m-0">Este documento es una representacion impresa de un CFDI</p>
-              </strong>
+              <p class="m-1">
+                <strong>Esta factura se emite a solicitud del cliente en terminos del Articulo 37
+                  del Codigo Fiscal de la Federacion. Este documento es una representacion impresa
+                  de un CFDI. Versión CFDI: 4.0 </strong>
+              </p>
+              <p class="m-1"> Utilice la sig ref al realizar su pago: <strong>
+                  <span
+                    t-field="o.payment_reference"/>
+                </strong></p>
+              <p class="m-1">
+                <span t-field="o.narration"/>
+              </p>
             </div>
             <div class="col-6">
               <table class="table table-sm" style="page-break-inside: avoid;">
@@ -322,22 +325,10 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col">
-            <span class="m-0" t-field="o.narration"/>
-          </div>
-        </div>
-        <class class="row">
-          <div class="col"> Utilice la sig ref al realizar su pago: <strong>
-              <span class="m-0"
-                t-field="o.payment_reference"/>
-            </strong></div>
-        </class>
-
         <t t-set="cfdi_vals" t-value="o._l10n_mx_edi_decode_cfdi()"/>
         <t t-set="is_cfdi_signed" t-value="bool(o._get_l10n_mx_edi_signed_edi_document())"/>
         <t t-if="is_cfdi_signed">
-          <div class="row mt-5" id="complement">
+          <div class="row mt-0" id="complement">
             <div t-if="cfdi_vals.get('sello')" class="barcode col-3">
               <img alt="Barcode"
                 t-att-src="'/report/barcode/?type=QR&amp;value=%s&amp;width=180&amp;height=180' % quote_plus(                             'https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?' + keep_query(                                 re=o.l10n_mx_edi_cfdi_supplier_rfc, rr=o.l10n_mx_edi_cfdi_customer_rfc,                                 tt='%.*f' % (o.currency_id.decimal_places, o.l10n_mx_edi_cfdi_amount), id=o.l10n_mx_edi_cfdi_uuid)                                 + '&amp;fe=%s' % quote_plus(                                     cfdi_vals['sello'][-8:], 'utf-8', 'strict', '=/').replace('%2B', '+'))"/>
@@ -381,14 +372,15 @@
                 <span class="text-uppercase" t-esc="cfdi_vals.get('uuid')"/>
               </div>
               <div class="digital-stamp-content text-center">
-                <strong>Este documento es una representación iompres de un CFDI</strong>
+                <strong>Este documento es una representación impresa de un CFDI</strong>
               </div>
             </div>
           </div>
         </t>
 
-        <div class="row mt-5" style="height: 10px; page-break-before:always;"/>
-        <div class="row mt-5" style="border: 1px solid black; text-transform: uppercase;">
+        <!-- <div class="row mt-5" style="height: 10px; page-break-before:always;"/> -->
+        <div class="row mt-0"
+          style="border: 1px solid black; text-transform: uppercase; page-break-inside: avoid;">
           <div class="col-12">
             <p>
               <div class="row">
