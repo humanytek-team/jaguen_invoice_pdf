@@ -425,12 +425,12 @@
               <div class="col-6">
                 <div class="row"> Acepto(amos) pagar a su vencimiento </div>
                 <br/>
-                <br/>
-                <br/>
                 <div class="row"> _________________________________________ </div>
               </div>
             </div>
-            <div class="row" style="height: 40px;"/>
+            <div class="row">
+              <br/>
+            </div>
           </div>
         </div>
       </div>
