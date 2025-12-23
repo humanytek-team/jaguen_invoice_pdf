@@ -28,15 +28,14 @@
       <field name="model">account.move</field>
     </record>
 
-    <template id="report_invoice_document_jaguen">
-      <t t-call="web.external_layout">
-      <!-- <t t-call="web.html_container"> -->
+    <template id="report_invoice_document_jaguen">      
+      <t t-call="web.html_container">
         <t t-foreach="docs" t-as="o">
-          <!-- <t t-call="web.external_layout"> -->
+          <t t-call="web.external_layout">
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
             <div class="page" style="font-size: 10px">
-              <div id="informations" class="row mb-0">
-                <div class="col-auto" name="info_left">
+              <div id="informations" class="row mb-0" style="width: 100%;">
+                <div class="col-auto" style="width: 50%;" name="info_left">
                   <div class="row" name="name">
                     <div class="col-4">
                       <strong>Número de Documento</strong>
@@ -103,7 +102,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-auto col-3 mw-100 mb-2" name="info_right">
+                <div class="col-auto col-3 mw-100 mb-2" style="width: 50%;" name="info_right">
                   <div class="row" name="date">
                     <div class="col-4">
                       <strong>Fecha</strong>
@@ -391,7 +390,7 @@
 
               <div class="row mt-0"
                 style="border: 1px solid black; text-transform: uppercase; page-break-inside: avoid;">
-                <div class="col-12">
+                <div class="col-12" style="padding: 5px;">
                   <p>
                     <div class="row">
                       <div class="col-6">
@@ -444,7 +443,7 @@
                 </div>
               </div>
             </div>
-          <!-- </t> -->
+          </t>
         </t>
       </t>
     </template>
