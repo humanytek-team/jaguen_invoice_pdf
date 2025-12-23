@@ -171,8 +171,8 @@
               </div>
 
               <table class="table table-sm o_main_table" name="invoice_line_table">
-                <thead style="font-weight: bold;">
-                  <tr>
+                <thead>
+                  <tr style="font-weight: bold;">
                     <th name="th_code" class="text-left">
                       <span>Código SAT</span>
                     </th>
@@ -187,7 +187,7 @@
                       <span>Precio Unitario</span>
                     </th>
                     <th name="th_price_unit" t-if="display_discount"
-                      t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                      t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" style="text-align: right;">
                       <span>Desc.%</span>
                     </th>
                     <th name="th_taxes"
@@ -216,16 +216,16 @@
                         <td name="account_invoice_line_name">
                           <span t-field="line.name" t-options="{'widget': 'text'}"/>
                         </td>
-                        <td class="text-right">
+                        <td class="text-right" style="text-align: right;">
                           <span t-field="line.quantity"/>
                           <span t-field="line.product_uom_id" groups="uom.group_uom"/>
                         </td>
                         <td
-                          t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                          t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" style="text-align: right;">
                           <span class="text-nowrap" t-field="line.price_unit"/>
                         </td>
                         <td t-if="display_discount"
-                          t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                          t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" style="text-align: right;">
                           <span class="text-nowrap" t-field="line.discount"/>
                         </td>
                         <td
@@ -233,7 +233,7 @@
                           <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))"
                             id="line_tax_ids"/>
                         </td>
-                        <td class="text-right o_price_total">
+                        <td class="text-right o_price_total" style="text-align: right;">
                           <!-- <span class="text-nowrap" t-field="line.price_subtotal"
                             groups="account.group_show_line_subtotals_tax_excluded"/>
                           <span class="text-nowrap" t-field="line.price_total"
@@ -257,7 +257,7 @@
 
                     <t
                       t-if="current_section and (line_last or lines[line_index+1].display_type == 'line_section')">
-                      <tr class="is-subtotal text-right">
+                      <tr class="is-subtotal text-right" style="text-align: right;">
                         <td colspan="99">
                           <strong class="mr16">Subtotal</strong>
                           <span t-esc="current_subtotal"
