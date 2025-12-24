@@ -172,32 +172,32 @@
 
               <table class="table table-sm o_main_table" name="invoice_line_table">
                 <thead>
-                  <tr style="font-weight: bold;">
+                  <tr>
                     <th name="th_code" class="text-left">
-                      <span>Código SAT</span>
+                      <strong><span>Código SAT</span></strong>
                     </th>
                     <th name="th_description" class="text-left">
-                      <span>Descripción</span>
+                      <strong><span>Descripción</span></strong>
                     </th>
                     <th name="th_quantity" class="text-right" style="text-align: right;">
-                      <span>Cantidad</span>
+                      <strong><span>Cantidad</span></strong>
                     </th>
                     <th name="th_priceunit"
                       t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" style="text-align: right;">
-                      <span>Precio Unitario</span>
+                      <strong><span>Precio Unitario</span></strong>
                     </th>
                     <th name="th_price_unit" t-if="display_discount"
                       t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" style="text-align: right;">
-                      <span>Desc.%</span>
+                      <strong><span>Desc.%</span></strong>
                     </th>
                     <th name="th_taxes"
                       t-attf-class="text-left {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                      <span>Impuestos</span>
+                      <strong><span>Impuestos</span></strong>
                     </th>
                     <th name="th_subtotal" class="text-right" style="text-align: right;">
                       <!-- <span groups="account.group_show_line_subtotals_tax_excluded">Subtotal</span>
                       <span groups="account.group_show_line_subtotals_tax_included">Subtotal</span> -->                      
-                      <span>Subtotal</span>
+                      <strong><span>Subtotal</span></strong>
                     </th>
                   </tr>
                 </thead>
@@ -389,8 +389,8 @@
               </t>
 
               <div class="row mt-0"
-                style="border: 1px solid black; text-transform: uppercase; page-break-inside: avoid;">
-                <div class="col-12" style="padding: 0 5px;">
+                style="border: 1px solid black; text-transform: uppercase; page-break-inside: avoid; padding: 0 10px; margin-top: 5px;">
+                <div class="col-12">
                   <p>
                     <div class="row">
                       <div class="col-6">
