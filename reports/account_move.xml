@@ -332,42 +332,69 @@
                 </div>
               </div>
 
-              <t t-if="o.l10n_mx_edi_cfdi_state == 'sent'">
+              <!-- <t t-set="mx_edi_doc"
+                t-value="o.edi_document_ids.filtered(lambda doc: doc.edi_format_id.code == 'cfdi' and doc.state == 'sent')"/> -->
+              <t t-set="mx_edi_doc"
+                t-value="o.l10n_mx_edi_document_ids if o.l10n_mx_edi_is_cfdi_needed and o.l10n_mx_edi_cfdi_state == 'sent' else False"/>
+              <!-- <t t-set="cfdi_vals"
+                t-value="mx_edi_doc._l10n_mx_edi_decode_cfdi() if mx_edi_doc else {}"/> -->
+              <t t-set="cfdi_vals"
+                t-value="mx_edi_doc._decode_cfdi_attachment(o.l10n_mx_edi_cfdi_attachment_id.raw) if mx_edi_doc else {}"/>
+              <t t-set="is_cfdi_signed" t-value="bool(mx_edi_doc) and bool(cfdi_vals)"/>
+              <t t-if="is_cfdi_signed">
                 <div class="row mt-0" id="complement">
-                    <div t-if="o.l10n_mx_edi_cfdi_qr_image" class="col-3">
-                        <img t-att-src="'data:image/png;base64,%s' % o.l10n_mx_edi_cfdi_qr_image.decode()" 
-                            style="max-height: 180px; max-width: 180px;"/>
+                  <div t-if="cfdi_vals.get('sello')" class="barcode col-3">
+                    <img alt="Barcode"
+                      t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=180&amp;height=180' % quote_plus('https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?' + keep_query(re=o.l10n_mx_edi_cfdi_supplier_rfc, rr=o.l10n_mx_edi_cfdi_customer_rfc,tt='%.*f' % (o.currency_id.decimal_places, o.l10n_mx_edi_cfdi_amount), id=o.l10n_mx_edi_cfdi_uuid) + '&amp;fe=%s' % quote_plus(cfdi_vals['sello'][-8:], 'utf-8', 'strict', '=/').replace('%2B', '+'))"/>
+                  </div>
+                  <!-- <div t-if="o.l10n_mx_edi_cfdi_qr_image" class="col-3">
+                      <img t-att-src="'data:image/png;base64,%s' % o.l10n_mx_edi_cfdi_qr_image.decode()" 
+                          style="max-height: 180px; max-width: 180px;"/>
+                  </div> -->
+                  <div class="complement-details col-9">
+                    <div class="digital-stamp">
+                      <span>Sello Digital Emisor</span>
                     </div>
-                    
-                    <div class="complement-details col-9">
-                        <div class="digital-stamp"><span>Sello Digital Emisor</span></div>
-                        <div class="digital-stamp-content">
-                            <span t-field="o.l10n_mx_edi_cfdi_signature_main"/>
-                        </div>
-                        
-                        <div class="digital-stamp"><span>Sello Digital SAT</span></div>
-                        <div class="digital-stamp-content">
-                            <span t-field="o.l10n_mx_edi_cfdi_signature_sat"/>
-                        </div>
-                        
-                        <div class="digital-stamp"><span>Cadena Original</span></div>
-                        <div class="digital-stamp-content">
-                            <span class="nowrap" t-field="o.l10n_mx_edi_cfdi_certificate_info"/>
-                        </div>
-
-                        <div class="digital-stamp"><span>Información de Certificación</span></div>
-                        <div class="digital-stamp-content" style="font-size: 8px;">
-                            <span>No. Certificado Emisor:</span> <span t-field="o.l10n_mx_edi_cfdi_sat_serial"/>
-                            <span> | Folio Fiscal:</span> <span class="text-uppercase" t-field="o.l10n_mx_edi_cfdi_uuid"/>
-                            <span> | Fecha Certificación:</span> <span t-field="o.l10n_mx_edi_cfdi_confirmation_datetime"/>
-                        </div>
-                        
-                        <div class="digital-stamp-content text-center mt-2">
-                            <strong>Este documento es una representación impresa de un CFDI</strong>
-                        </div>
+                    <div class="digital-stamp-content">
+                      <span t-esc="cfdi_vals.get('sello')"/>
                     </div>
+                    <div class="digital-stamp">
+                      <span>Sello Digital SAT</span>
+                    </div>
+                    <div class="digital-stamp-content">
+                      <span t-esc="cfdi_vals.get('sello_sat')"/>
+                    </div>
+                    <div class="digital-stamp">
+                      <span>Cadena Original</span>
+                    </div>
+                    <div class="digital-stamp-content">
+                      <span class="nowrap" t-esc="cfdi_vals.get('cadena')"/>
+                    </div>
+                    <div class="digital-stamp">
+                      <span>Información Extra</span>
+                    </div>
+                    <div class="digital-stamp-content">
+                      <span>Emisor de Certificado:</span>
+                      <span t-esc="cfdi_vals.get('certificate_number')"/>
+                      <span> | Certificado SAT:</span>
+                      <span t-esc="cfdi_vals.get('certificate_sat_number')"/>
+                      <span> | Lugar de expedición:</span>
+                      <span t-esc="cfdi_vals.get('expedition')"/>
+                      <span> | Régimen Fiscal:</span>
+                      <span t-esc="cfdi_vals.get('fiscal_regime')"/>
+                      <span> | Fecha de Emisión:</span>
+                      <span t-esc="cfdi_vals.get('emission_date_str')"/>
+                      <span> | Fecha de Certificación:</span>
+                      <span t-esc="cfdi_vals.get('stamp_date')"/>
+                      <span> | Folio Fiscal:</span>
+                      <span class="text-uppercase" t-esc="cfdi_vals.get('uuid')"/>
+                    </div>
+                    <div class="digital-stamp-content text-center">
+                      <strong>Este documento es una representación impresa de un CFDI</strong>
+                    </div>
+                  </div>
                 </div>
-            </t>
+              </t>
 
               <div class="row mt-0"
                 style="border: 1px solid black; text-transform: uppercase; page-break-inside: avoid; padding: 0 10px; margin-top: 5px;">
