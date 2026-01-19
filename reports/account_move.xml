@@ -332,8 +332,10 @@
                 </div>
               </div>
 
+              <!-- <t t-set="mx_edi_doc"
+                t-value="o.edi_document_ids.filtered(lambda doc: doc.edi_format_id.code == 'cfdi' and doc.state == 'sent')"/> -->
               <t t-set="mx_edi_doc"
-                t-value="o.edi_document_ids.filtered(lambda doc: doc.edi_format_id.code == 'cfdi' and doc.state == 'sent')"/>
+                t-value="o.edi_document_ids.filtered(lambda doc: doc.l10n_mx_edi_is_cfdi_needed and doc.l10n_mx_edi_cfdi_state == 'sent')"/>
               <t t-set="cfdi_vals"
                 t-value="mx_edi_doc._l10n_mx_edi_decode_cfdi() if mx_edi_doc else {}"/>
               <t t-set="is_cfdi_signed" t-value="bool(mx_edi_doc) and bool(cfdi_vals)"/>
