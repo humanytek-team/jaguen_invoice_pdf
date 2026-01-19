@@ -335,7 +335,7 @@
               <!-- <t t-set="mx_edi_doc"
                 t-value="o.edi_document_ids.filtered(lambda doc: doc.edi_format_id.code == 'cfdi' and doc.state == 'sent')"/> -->
               <t t-set="mx_edi_doc"
-                t-value="o.edi_document_ids.filtered(lambda doc: doc.l10n_mx_edi_is_cfdi_needed == True and doc.l10n_mx_edi_cfdi_state == 'sent')"/>
+                t-value="o if o.l10n_mx_edi_cfdi_state == 'sent' else False"/>
               <!-- <t t-set="cfdi_vals"
                 t-value="mx_edi_doc._l10n_mx_edi_decode_cfdi() if mx_edi_doc else {}"/> -->
               <t t-set="cfdi_vals"
@@ -343,9 +343,13 @@
               <t t-set="is_cfdi_signed" t-value="bool(mx_edi_doc) and bool(cfdi_vals)"/>
               <t t-if="is_cfdi_signed">
                 <div class="row mt-0" id="complement">
-                  <div t-if="cfdi_vals.get('sello')" class="barcode col-3">
+                  <!-- <div t-if="cfdi_vals.get('sello')" class="barcode col-3">
                     <img alt="Barcode"
                       t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=180&amp;height=180' % quote_plus('https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?' + keep_query(re=o.l10n_mx_edi_cfdi_supplier_rfc, rr=o.l10n_mx_edi_cfdi_customer_rfc,tt='%.*f' % (o.currency_id.decimal_places, o.l10n_mx_edi_cfdi_amount), id=o.l10n_mx_edi_cfdi_uuid) + '&amp;fe=%s' % quote_plus(cfdi_vals['sello'][-8:], 'utf-8', 'strict', '=/').replace('%2B', '+'))"/>
+                  </div> -->
+                  <div t-if="o.l10n_mx_edi_cfdi_qr_image" class="col-3">
+                      <img t-att-src="'data:image/png;base64,%s' % o.l10n_mx_edi_cfdi_qr_image.decode()" 
+                          style="max-height: 180px; max-width: 180px;"/>
                   </div>
                   <div class="complement-details col-9">
                     <div class="digital-stamp">
